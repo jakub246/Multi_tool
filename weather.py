@@ -1,16 +1,16 @@
 import requests
 import datetime
-from consolemenu import *
+import consolemenu
+import settings
 
 
 def get_json_weather():
-    api_key = 'a9124e99ed7068850ab56857a3e0aafaa96263b6'
-
     headers = {
-        'Authorization': 'Token {}'.format(api_key)
+        'Authorization': 'Token {}'.format(settings.api_key)
     }
 
-    request = 'https://api.meteo.pl/api/v1/model/coamps/grid/2a/coordinates/130,111/field/airtmp_zht_fcstfld/level/000002_000000/date/2018-05-15T00/forecast/'
+    request = 'https://api.meteo.pl/api/v1/model/coamps/grid/2a/coordinates/130,111/field/' \
+              'airtmp_zht_fcstfld/level/000002_000000/date/2018-05-15T00/forecast/'
     response = requests.post(request, headers=headers)
 
     return response.json()
@@ -23,33 +23,24 @@ def get_temp(time):
 
 
 def kelwin_to_celsius(temp):
-    return temp-273.15
+    return temp - 273.15
+
+
+def always_two_digit(number):
+    if number < 10:
+        return '0' + str(number)
+    else:
+        return str(number)
 
 
 def get_time(hour):
     now = datetime.datetime.now()
-    month = ''
-    day = ''
-    shour = ''
-    if now.month < 10:
-        month = '0' + str(now.month)
-    else:
-        month = str(now.month)
-    if now.day < 10:
-            day = '0' + str(now.day)
-    else:
-            day = str(now.day)
-    if hour < 10:
-        shour = '0' + str(hour)
-    else:
-        shour = str(hour)
-
-    return str(now.year) + '-' + month + '-' + day + 'T' + shour + ':00:00Z'
+    return str(now.year) + '-' + always_two_digit(now.month) + '-' + always_two_digit(now.day) + 'T' + \
+        always_two_digit(hour) + ':00:00Z'
 
 
 def weather_main():
     print('Today weather in Poland(near Białowieża) from meteo.pl\n\n')
-
     hour = 5
 
     for x in range(0, 10):
@@ -62,4 +53,4 @@ def weather_main():
     print('\n\n *must be near Białowieża because this location is free')
     print('  Other location cost very much -> 1gr for one request :(')
 
-    Screen().input('Press [Enter] to continue')
+    consolemenu.Screen().input('Press [Enter] to continue')

@@ -1,9 +1,10 @@
-from calc.primaryCalc import get_expression
+import calc.primaryCalc
+import consolemenu
 
 
 def calc_main():
     try:
-     get_expression()
+        calc.primaryCalc.get_expression()
     except:
-        Screen().input('\tJebło\nPress [Enter] to continue')
+        consolemenu.Screen().input('\tJebło\nPress [Enter] to continue')
 
